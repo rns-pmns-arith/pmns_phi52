@@ -19,9 +19,6 @@ https://software.intel.com/sites/landingpage/IntrinsicsGuide/#!=undefined
 
 #include "add_mult_poly.h"
 
-/*//pour force inline
-#undef force_inline
-#define force_inline __attribute__((always_inline))*/
 
 #define WORD 64
 
@@ -38,12 +35,9 @@ unsigned long long int START, STOP, START1,STOP1;
 void afficheVect(long int *A, char *var, int size)
 {
 	int i;
-	//long int tmp;
 	printf("%s := ",var);
 	
 	for(i=0;i<size;i++){
-		//tmp=0;
-		//for(int j=0;j<WORD;j++) tmp^= A[size-1-i];
 		printf("%16.16lX ",A[	i]);
 	}
 	printf("\n");
@@ -63,7 +57,6 @@ static inline void init_nA_nB(long int * nA, long int * nB)
 		nB[j] = nB[j]&CONV_MASK;
 	}
 	
-	//printf("((CONV_MASK<<1)|1L))=%16.16lX\n",((CONV_MASK<<1)|1L));
 }
 
 /********************************************************************************
@@ -191,9 +184,7 @@ int main(int argc, char* argv[]){
 
 
 	/***********************************************/
-	printf("\nmult_mod_poly_AVX512 n=56, phi=2^52 :\n------------------------------------\n");
-	
-	//init_nA_nB(nA->i64,nB->i64);
+	printf("\nmult_mod_poly_AVX512 n=%d, phi=2^52 :\n------------------------------------\n",NB_COEFF);
 	
 	from_int_to_pmns(nA->i64, A);
 	from_int_to_pmns(nB->i64, B);
@@ -201,11 +192,6 @@ int main(int argc, char* argv[]){
 	gmp_printf("B       : %Zd\n\n", B);
 	afficheVect(nA->i64,"nA",NB_COEFF);
 	afficheVect(nB->i64,"nB",NB_COEFF);
-	//exact_coeffs_reduction(nA->i64, nA->i64);
-	//afficheVect(nA->i64,"After exact_coeffs_red\nnA",NB_COEFF_N56_PMNS);
-	//from_pmns_to_int(A, nA->i64, modul_p, gama_pow_N56_pmns);
-	
-	//gmp_printf("nA_pmns : %Zd\n", E);
 
 
 	//goto fin;
@@ -216,7 +202,7 @@ int main(int argc, char* argv[]){
 	afficheVect(res->i64,"res (AVX512)",NB_COEFF);
 	/*goto fin;//*/
 		
-	printf("\nComparison with mult_mod_poly n=56, phi=2^52 :\n---------------------------------------------\n");
+	printf("\nComparison with mult_mod_poly n=%d, phi=2^52 :\n---------------------------------------------\n",NB_COEFF);
 	
 	mult_mod_poly(resMul->i64, nA->i64,nB->i64);
 
@@ -310,10 +296,10 @@ chrono:
 	printf("\t/*********************/\n\n");
 
  
-	unsigned long long int timer=0, timer1=0, timer2=0, timer3=0, timer4=0, timer5=0, timer6=0, timer7=0;
+	unsigned long long int timer=0, timer1=0, timer4=0, timer5=0, timer6=0, timer7=0;
 
 	
-	// timer mult_mod_poly_N56_pmns        :
+	// timer mult_mod_poly        :
 	
 	for(int k=0; k<NSAMPLES;k++){
 	
@@ -355,7 +341,7 @@ chrono:
 
 
 		
-	// timer mult_mod_poly_n56_pmns AVX512 :
+	// timer mult_mod_poly AVX512 :
 	
 	for(int k=0; k<NSAMPLES;k++){
 	
@@ -571,7 +557,7 @@ chrono:
 	printf("\t/**************************/\n\n");
 	
 	
-	timer=0, timer1=0, timer2=0, timer3=0, timer4=0, timer5=0, timer6=0, timer7=0;
+	timer=0, timer1=0, timer4=0, timer5=0, timer6=0, timer7=0;
 
 	
 	// #Instructions mult_mod_poly_n6_pmns        :
