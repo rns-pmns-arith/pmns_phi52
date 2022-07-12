@@ -47,5 +47,7 @@ void internal_reduction(int64_t *rop, int128 *op);
 
 void exact_coeffs_reduction(int64_t *rop, int64_t *op);
 
+void mult_mod_poly_AVX512(int64_t *rop, int64_t *pa, int64_t *pb);
+
 #endif
 
